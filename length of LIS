@@ -1,0 +1,90 @@
+BRUTEFORCE:
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        if(text1.length()==0|| text2.length()==0){
+            return 0;
+        }
+        HashSet<String> set1=new HashSet<>();
+        HashSet<String> set2=new HashSet<>();
+        sub(0,text1,"",set1);
+        sub(0,text2,"",set2);
+        int maxi=-1;
+        for (String s1 : set1) {
+            for (String s2 : set2) {
+                if (s1.equals(s2)) {   
+                    maxi=Math.max(maxi,s1.length());
+                    break;
+                }
+            }
+        }
+        return maxi;
+
+    }
+    public void sub(int idx,String text,String s,HashSet<String> set){
+        if(idx==text.length()){
+           set.add(s);
+           return;
+        }
+        sub(idx+1,text,s+text.charAt(idx),set);
+        sub(idx+1,text,s,set);
+        return;
+    
+}
+
+**********************************************************************************************************************************************
+Recursive solution:
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        int n=text1.length();
+        int m=text2.length();
+        return f(n-1,m-1,text1,text2);
+
+    }
+    public int f(int i,int j ,String s1,String s2){
+        if(i<0 || j<0){
+          return 0;
+        }
+        if(s1.charAt(i)==s2.charAt(j)){
+            return 1+f(i-1,j-1,s1,s2);
+        }
+        else{
+            return 0+Math.max(f(i-1,j,s1,s2),f(i,j-1,s1,s2));
+        }
+        
+    }
+}
+
+Memoization
+
+**********************************************************************************************************************************************
+tabulation solution:
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        int n=text1.length();
+        int m=text2.length();
+        int[][] dp=new int[n][m];
+        for(int[] a:dp){
+            Arrays.fill(a,-1);
+        }
+        return f(n-1,m-1,text1,text2,dp);
+
+    }
+    public int f(int i,int j ,String s1,String s2,int[][] dp){
+        if(i<0 || j<0){
+          return 0;
+        }
+        if(dp[i][j]!=-1){
+            return dp[i][j];
+        }
+        if(s1.charAt(i)==s2.charAt(j)){
+            return dp[i][j]=1+f(i-1,j-1,s1,s2,dp);
+        }
+        else{
+            return dp[i][j]= 0+Math.max(f(i-1,j,s1,s2,dp),f(i,j-1,s1,s2,dp));
+        }
+        
+    }
+}
+
